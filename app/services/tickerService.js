@@ -1,26 +1,22 @@
-import io from 'socket.io-client';
-import { setTicker } from '../store/actionCreators';
-import { store } from '../index';
-
+import io from "socket.io-client";
+import { setTicker } from "../store/actionCreators";
 
 let socket = null;
 
+export const connectNode = (stockSymbol, refreshTime) => {
+  socket = io("http://localhost:4002");
 
+  socket.on("connect", () => {
+    console.log("connected");
 
-export const connectNode = (stockSymbol) => {
-    socket = io('http://localhost:4000');
-
-    socket.on('connect', () => {
-        console.log('connected');
-
-        socket.on(stockSymbol, (data) => {
-            store.dispatch(setTicker(JSON.parse(data)));
-        });
-
-        socket.emit('ticker', stockSymbol);
+    socket.on(stockSymbol, (data) => {
+      setTicker(JSON.parse(data));
     });
 
-    socket.on('disconnect', () => {
-        console.log('disconnected');
-    });
+    socket.emit("ticker", { stockSymbol, refreshTime });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("disconnected");
+  });
 };
