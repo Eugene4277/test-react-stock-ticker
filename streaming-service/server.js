@@ -3,7 +3,7 @@
 ////
 // CONFIGURATION SETTINGS
 ////
-var FETCH_INTERVAL = 500;
+var FETCH_INTERVAL = 5000;
 var PRETTY_PRINT_JSON = true;
 
 ////
@@ -43,7 +43,7 @@ function getQuote(socket, ticker) {
   quote.ticker = ticker;
   quote.exchange = "NASDAQ";
   quote.price = getRandomValBetween(100, 300, 2);
-  quote.change = getRandomValBetween(0, 200, 2);
+  quote.change = getRandomValBetween(-3, 3, 2);
   quote.change_percent = getRandomValBetween(0, 1, 2);
   quote.last_trade_time = getUTCDate();
   quote.dividend = getRandomValBetween(0, 1, 2);
@@ -56,14 +56,14 @@ function getQuote(socket, ticker) {
 }
 
 function trackTicker(socket, ticker) {
-  console.log("track Ticker");
-
   // run the first time immediately
-  getQuote(socket, ticker);
+  getQuote(socket, ticker.stockSymbol);
 
   // every N seconds
+  FETCH_INTERVAL = ticker.refreshTime;
+
   var timer = setInterval(function () {
-    getQuote(socket, ticker);
+    getQuote(socket, ticker.stockSymbol);
   }, FETCH_INTERVAL);
 
   socket.on("disconnect", function () {
@@ -88,4 +88,4 @@ io.sockets.on("connection", function (socket) {
   });
 });
 
-server.listen(process.env.PORT || 4000);
+server.listen(process.env.PORT || 4002);
