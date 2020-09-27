@@ -1,1 +1,1 @@
-export const FETCH_TICKER = "FETCH_TICKER";
+export const FETCH_TICKER = 'FETCH_TICKER';

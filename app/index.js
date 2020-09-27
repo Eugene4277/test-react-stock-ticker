@@ -10,7 +10,7 @@ render(
     <AppContainer>
         <Root store={store} history={history} />
     </AppContainer>,
-    document.getElementById("root")
+    document.getElementById('root')
 );
 
 if (module.hot) {
